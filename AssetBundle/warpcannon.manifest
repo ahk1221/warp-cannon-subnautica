@@ -1,0 +1,42 @@
+ManifestFileVersion: 0
+CRC: 3774415172
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: dcfcf5bef88e95b233a2367bfd8a445f
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 993603fa575e7f616ed4aead158acd87
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/PropulsionCannon.fbx
+- Assets/WarpScale.png
+- Assets/Propulsion_Cannon_spec.png
+- Assets/Propulsion_Cannon_normal.png
+- Assets/Propulsion_Cannon.png
+- Assets/Materials/Propulsion_Cannon.mat
+- Assets/WarpCannon.prefab
+- Assets/Warp_Cannon.png
+- Assets/WarpBattery.png
+- Assets/Propulsion_Cannon_illum.png
+Dependencies:
+- C:/Users/GAMEON/Documents/BundleMaking/Assets/AssetBundles/testmodel
