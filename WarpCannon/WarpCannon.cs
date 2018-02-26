@@ -20,9 +20,8 @@ namespace WarpCannon
 
         public float overlayFXDuration;
 
-        public GameObject effectPrefab;
-
-        public Transform muzzle;
+        public float fireRate = 1f;
+        public float nextFire = 0f;
 
         public void Init()
         {
@@ -43,6 +42,10 @@ namespace WarpCannon
         public override bool OnRightHandDown()
         {
             base.OnRightHandDown();
+
+            if (Time.time < nextFire) return true;
+
+            nextFire = Time.time + fireRate;
 
             var aimingTransform = Player.main.camRoot.GetAimingTransform();
             var dist = 0f;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using SMLHelper;
 using System.IO;
 using Logger = OasisModLoader.Logging.Logger;
+using System.Linq;
 
 namespace WarpCannon
 {
@@ -52,34 +53,29 @@ namespace WarpCannon
                 return;
             }
 
-            // Load GameObject
+            // Load GameObjects
+
+            // Load Battery
             var warpCannonBattery = AssetBundle.LoadAsset<GameObject>("WarpBattery") as GameObject;
             Utility.AddBasicComponents(ref warpCannonBattery, "WarpBattery");
             warpCannonBattery.AddComponent<Pickupable>();
             warpCannonBattery.AddComponent<Battery>();
             warpCannonBattery.AddComponent<TechTag>().type = warpBatteryTechType;
 
+            CustomPrefabHandler.customPrefabs.Add(new CustomPrefab("WarpBattery", "WorldEntities/Tools/WarpBattery", warpCannonBattery, warpBatteryTechType));
+
+            // Load Warp Cannon
             var warpCannon = AssetBundle.LoadAsset<GameObject>("WarpCannon");
             Utility.AddBasicComponents(ref warpCannon, WARP_CANNON_CLASS_ID);
             warpCannon.AddComponent<Pickupable>();
             warpCannon.AddComponent<TechTag>().type = warpCannonTechType;
 
-            CustomPrefabHandler.customPrefabs.Add(new CustomPrefab("WarpBattery", "WorldEntities/Tools/WarpBattery", warpCannonBattery, warpBatteryTechType));
-
-            var energyMixin = warpCannon.AddComponent<EnergyMixin>();
-            energyMixin.allowBatteryReplacement = true;
-            energyMixin.compatibleBatteries = new List<TechType>();
-            energyMixin.compatibleBatteries.Add(warpBatteryTechType);
-            energyMixin.defaultBattery = warpBatteryTechType;
-            energyMixin.defaultBatteryCharge = 100;
-            energyMixin.batteryModels = new List<EnergyMixin.BatteryModels>()
-            {
-                new EnergyMixin.BatteryModels()
-                {
-                    techType = warpBatteryTechType,
-                    model = warpCannonBattery
-                }
-            }.ToArray();
+            var fabricating = warpCannon.FindChild("3rd person model").AddComponent<VFXFabricating>();
+            fabricating.localMinY = -0.4f;
+            fabricating.localMaxY = 0.2f;
+            fabricating.posOffset = new Vector3(-0.054f, 0.223f, -0.06f);
+            fabricating.eulerOffset = new Vector3(-44.86f, 90f, 0f);
+            fabricating.scaleFactor = 1;
 
             var warpCannonComponent = warpCannon.AddComponent<WarpCannon>();
             warpCannonComponent.Init();
