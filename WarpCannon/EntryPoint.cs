@@ -44,7 +44,7 @@ namespace WarpCannon
             warpBatteryData._craftAmount = 1;
             warpBatteryData._ingredients = new List<IngredientHelper>();
             warpBatteryData._ingredients.Add(new IngredientHelper(TechType.Battery, 1));
-            warpBatteryData._ingredients.Add(new IngredientHelper(warpScalesTechType, 3));
+            warpBatteryData._ingredients.Add(new IngredientHelper(warpScalesTechType, 2));
             warpBatteryData._techType = warpScalesTechType;
 
             CraftDataPatcher.customTechData.Add(warpCannonTechType, warpCannonData);
