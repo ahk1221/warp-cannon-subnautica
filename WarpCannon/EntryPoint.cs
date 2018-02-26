@@ -12,6 +12,8 @@ namespace WarpCannon
     public class EntryPoint : Mod
     {
         public const string WARP_CANNON_CLASS_ID = "WarpCannon";
+        public const string WARP_BATTERY_CLASS_ID = "WarpBattery";
+        public const string WARP_SCALE_CLASS_ID = "WarpScale";
 
         public static TechType warpCannonTechType;
         public static TechType warpScalesTechType;
@@ -25,25 +27,36 @@ namespace WarpCannon
 
         public override void OnGameStart()
         {
-            warpCannonTechType = TechTypePatcher.AddTechType("WarpCannon", "Warp Cannon", "A tool that allows you to warp 30 meters using Warper technology.");
-            warpScalesTechType = TechTypePatcher.AddTechType("WarpScales", "Warp Scale", "A resource obtained from warpers that can be used to craft Warp Batteries.");
-            warpBatteryTechType = TechTypePatcher.AddTechType("WarpBattery", "Warp Battery", "A battery that powers Warp Cannons.");
+            warpCannonTechType = TechTypePatcher.AddTechType(WARP_CANNON_CLASS_ID, "Warp Cannon", "A tool that allows you to warp 30 meters using Warper technology.");
+            warpScalesTechType = TechTypePatcher.AddTechType(WARP_SCALE_CLASS_ID, "Warp Scale", "A resource obtained from warpers that can be used to craft Warp Batteries.");
+            warpBatteryTechType = TechTypePatcher.AddTechType(WARP_BATTERY_CLASS_ID, "Warp Battery", "A battery that powers Warp Cannons.");
 
             var warpCannonData = new TechDataHelper();
             warpCannonData._craftAmount = 1;
             warpCannonData._ingredients = new List<IngredientHelper>();
             warpCannonData._ingredients.Add(new IngredientHelper(warpBatteryTechType, 1));
             warpCannonData._ingredients.Add(new IngredientHelper(TechType.AdvancedWiringKit, 1));
+            warpCannonData._ingredients.Add(new IngredientHelper(TechType.Magnetite, 2));
+            warpCannonData._ingredients.Add(new IngredientHelper(TechType.Kyanite, 2));
             warpCannonData._techType = warpCannonTechType;
 
+            var warpBatteryData = new TechDataHelper();
+            warpBatteryData._craftAmount = 1;
+            warpBatteryData._ingredients = new List<IngredientHelper>();
+            warpBatteryData._ingredients.Add(new IngredientHelper(TechType.Battery, 1));
+            warpBatteryData._ingredients.Add(new IngredientHelper(warpScalesTechType, 3));
+            warpBatteryData._techType = warpScalesTechType;
+
             CraftDataPatcher.customTechData.Add(warpCannonTechType, warpCannonData);
+            CraftDataPatcher.customTechData.Add(warpBatteryTechType, warpBatteryData);
+
             CraftDataPatcher.customEquipmentTypes.Add(warpCannonTechType, EquipmentType.Hand);
             CraftDataPatcher.customItemSizes.Add(warpCannonTechType, new Vector2int(2, 2));
-
             CraftDataPatcher.customHarvestTypeList.Add(TechType.Warper, HarvestType.DamageAlive);
             CraftDataPatcher.customHarvestOutputList.Add(TechType.Warper, warpScalesTechType);
 
             CraftTreePatcher.customCraftNodes.Add("Personal/Tools/WarpCannon", warpCannonTechType);
+            CraftTreePatcher.customCraftNodes.Add("Resources/Electronics/WarpBattery", warpBatteryTechType);
 
             // Load AssetBundle
             AssetBundle = AssetBundle.LoadFromFile(Path.Combine(pathToModsFolder, "warpcannon.assets"));
@@ -76,6 +89,20 @@ namespace WarpCannon
             fabricating.posOffset = new Vector3(-0.054f, 0.223f, -0.06f);
             fabricating.eulerOffset = new Vector3(-44.86f, 90f, 0f);
             fabricating.scaleFactor = 1;
+
+            var energyMixin = warpCannon.AddComponent<EnergyMixin>();
+            energyMixin.defaultBattery = warpBatteryTechType;
+            energyMixin.storageRoot = warpCannon.FindChild("3rd person model").AddComponent<ChildObjectIdentifier>();
+            energyMixin.compatibleBatteries = new List<TechType> { warpBatteryTechType };
+            energyMixin.allowBatteryReplacement = true;
+            energyMixin.batteryModels = (new List<EnergyMixin.BatteryModels>()
+            {
+                new EnergyMixin.BatteryModels()
+                {
+                    techType = warpBatteryTechType,
+                    model = warpCannonBattery
+                }
+            }).ToArray();
 
             var warpCannonComponent = warpCannon.AddComponent<WarpCannon>();
             warpCannonComponent.Init();

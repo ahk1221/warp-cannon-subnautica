@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace WarpCannon
 {
+    [RequireComponent(typeof(EnergyMixin))]
     public class WarpCannon : PlayerTool
     {
         public override string animToolName => "propulsioncannon";
@@ -43,7 +44,7 @@ namespace WarpCannon
         {
             base.OnRightHandDown();
 
-            if (Time.time < nextFire) return true;
+            if (Time.time <= nextFire || energyMixin.charge <= 0 || !CanWarp()) return true;
 
             nextFire = Time.time + fireRate;
 
@@ -73,7 +74,14 @@ namespace WarpCannon
             Player.main.gameObject.AddComponent<VFXOverlayMaterial>().ApplyAndForgetOverlay(warpedMaterial, "VFXOverlay: Warped", Color.clear, overlayFXDuration);
             Utils.PlayEnvSound(warpOutSound, Player.main.transform.position, 20f);
 
+            this.energyMixin.ConsumeEnergy(4f);
+
             return true;
+        }
+
+        private bool CanWarp ()
+        {
+            return (Player.main.IsInBase() == false) && (Player.main.IsInSub() == false);
         }
 
     }
