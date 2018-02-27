@@ -10,9 +10,6 @@ Simply build the .dll file and copy it to your Subnautica/Subnautica_Data/SMods 
 # Crafting and Ammo
 Crafting and ammo now both work! Yay! You will need Warp Scales (knife Warpers) to make a Warp Battery, which you can then use to craft the Warp Cannon.
 
-# Ammo
-Ammo is currently borken so until that's fixed, I'm not going to release it on Nexus.
-
 # Spawn codes
 warpcannon - Warp Cannon <br />
 warpscales - Warp Scale (resource obtained by knifing Warpers. used for crafting Warp Batteries.) <br />
